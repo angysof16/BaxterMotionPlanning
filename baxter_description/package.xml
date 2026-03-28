@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>baxter_description</name>
+  <version>0.0.1</version>
+  <description>URDF Challenge: pure robot description (no simulation tags)</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>xacro</depend>
+  <depend>urdf</depend>
+  <depend>rviz2</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>joint_state_publisher_gui</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

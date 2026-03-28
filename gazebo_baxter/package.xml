@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>gazebo_baxter</name>
+  <version>0.0.1</version>
+  <description>Gazebo Challenge: robot simulation with gz-sim and ROS 2 bridge</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>baxter_description</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

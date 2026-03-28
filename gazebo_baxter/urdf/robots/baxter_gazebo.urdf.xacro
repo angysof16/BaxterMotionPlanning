@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="baxter_gazebo">
+
+  <!-- Include pure robot -->
+  <xacro:include filename="$(find baxter_description)/urdf/robots/baxter.urdf.xacro" />
+
+  <!-- Include gazebo sensors -->
+  <xacro:include filename="$(find gazebo_baxter)/urdf/sensors/imu_gazebo.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_baxter)/urdf/sensors/lidar_gazebo.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_baxter)/urdf/sensors/camera_color_gazebo.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_baxter)/urdf/sensors/camera_rgbd_gazebo.urdf.xacro" />
+
+  <xacro:macro name="baxter_gazebo" params="name use_sensors:=true">
+    <!-- Instantiate base robot -->
+    <xacro:baxter name="${name}" use_sensors="${use_sensors}" />
+
+    <!-- Add Gazebo-specific sensor tags ONLY if sensors are enabled -->
+    <xacro:if value="${use_sensors}">
+      <!-- Reference the sensor links created by baxter.urdf.xacro -->
+      <xacro:imu_gazebo frame="imu_link" topic_name="imu" sensor_name="imu_sensor" />
+      <xacro:lidar_gazebo frame="lidar_link" topic_name="scan" sensor_name="lidar_sensor" />
+      <xacro:camera_color_gazebo frame="camera_link" topic_name="camera/image_raw"
+        sensor_name="camera_sensor" />
+    </xacro:if>
+
+
+    <!-- Joint State Publisher Plugin -->
+    <gazebo>
+      <plugin filename="gz-sim-joint-state-publisher-system"
+        name="gz::sim::systems::JointStatePublisher">
+      </plugin>
+    </gazebo>
+
+    <!-- Joint Position Controller Plugin for each joint -->
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>torso_head</joint_name>
+        <topic>/model/baxter/joint/torso_head/cmd_pos</topic>
+        <p_gain>10</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>0.5</d_gain>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>torso_left_upper_shoulder</joint_name>
+        <topic>/model/baxter/joint/torso_left_upper_shoulder/cmd_pos</topic>
+        <p_gain>50</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>1.0</d_gain>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>left_upper_shoulder_lower_shoulder</joint_name>
+        <topic>/model/baxter/joint/left_upper_shoulder_lower_shoulder/cmd_pos</topic>
+        <p_gain>50</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>1.0</d_gain>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>left_lower_shoulder_upper_elbow</joint_name>
+        <topic>/model/baxter/joint/left_lower_shoulder_upper_elbow/cmd_pos</topic>
+        <p_gain>50</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>1.0</d_gain>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>torso_right_upper_shoulder</joint_name>
+        <topic>/model/baxter/joint/torso_right_upper_shoulder/cmd_pos</topic>
+        <p_gain>50</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>1.0</d_gain>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_upper_shoulder_lower_shoulder</joint_name>
+        <topic>/model/baxter/joint/right_upper_shoulder_lower_shoulder/cmd_pos</topic>
+        <p_gain>50</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>1.0</d_gain>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="gz-sim-joint-position-controller-system"
+        name="gz::sim::systems::JointPositionController">
+        <joint_name>right_lower_shoulder_upper_elbow</joint_name>
+        <topic>/model/baxter/joint/right_lower_shoulder_upper_elbow/cmd_pos</topic>
+        <p_gain>50</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>1.0</d_gain>
+      </plugin>
+    </gazebo>
+
+
+  </xacro:macro>
+
+  <!-- Instantiate the macro -->
+  <xacro:baxter_gazebo name="baxter" use_sensors="true" />
+</robot>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="baxter">
+
+    <xacro:include filename="$(find baxter_description)/urdf/robots/baxter.urdf.xacro" />
+
+    <!-- Instancia para uso standalone -->
+    <xacro:baxter name="baxter" use_sensors="true" />
+
+</robot>
