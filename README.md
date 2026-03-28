@@ -12,9 +12,12 @@ This project brings Rethink Robotics' Baxter robot into a modern ROS2 stack. The
 
 ---
 
-## Architecture (Planned)
+## Planned Architecture
 
-<img width="1024" height="1536" alt="Image" src="https://github.com/user-attachments/assets/50d16be1-dce3-4cdc-9341-57b7ca2f4e49" />
+<div align="center">
+    <img height="500" alt="Image" src="https://github.com/user-attachments/assets/e53076b4-87a3-45d0-976b-5db25c7f14a2" />
+</div>
+
 
 The custom action interface:
 
@@ -107,7 +110,7 @@ ros2 launch baxter_description display.launch.py
 | 3 | MoveIt2 motion planning for pick & place | Planned |
 | 4 | Custom `MoveArm` action interface | Planned |
 | 5 | Zenoh RMW bridge - two-machine architecture | Planned |
-| 6 | 
+| 6 | Wii Remote teleoperation via `joy` + custom ROS2 node | Planned |
 | 7 | FastDDS vs Zenoh latency benchmarks | Possible |
 
 ---
