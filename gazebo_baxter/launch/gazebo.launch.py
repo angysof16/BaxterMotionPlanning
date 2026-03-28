@@ -68,7 +68,7 @@ ARGUMENTS = [
 
 def get_robot_description():
     # ── Package paths ──────────────────────────────────────────────────────────
-    pkg_gazebo = get_package_share_directory("gazebo_ros_challenge")
+    pkg_gazebo = get_package_share_directory("gazebo_baxter")
     pkg_urdf = get_package_share_directory("baxter_description")
 
     # ── Process xacro ─────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ def generate_launch_description():
 
     # ── Package paths ──────────────────────────────────────────────────────────
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
-    pkg_gazebo = get_package_share_directory("gazebo_ros_challenge")
+    pkg_gazebo = get_package_share_directory("gazebo_baxter")
     pkg_urdf = get_package_share_directory("baxter_description")
 
     # ── Paths ─────────────────────────────────────────────────────────────────

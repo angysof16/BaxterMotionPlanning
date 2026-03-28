@@ -19,8 +19,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/base/PEDESTAL.STL" scale="1 1 1" />
         </geometry>
-        <material name="lightgreen">
-          <color rgba=".047 .5843 .051 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -48,8 +48,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/head/H0.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -72,8 +72,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/head/H1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -120,8 +120,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/torso/base_link.STL" />
         </geometry>
-        <material name="blue">
-          <color rgba="0 0 1 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -148,8 +148,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/upper_shoulder/S0.STL" />
         </geometry>
-        <material name="blue">
-          <color rgba="0 0 1 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -176,8 +176,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/lower_shoulder/S1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -204,8 +204,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/upper_elbow/E0.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -232,8 +232,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/lower_elbow/E1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -260,8 +260,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/upper_forearm/W0.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -288,8 +288,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/lower_forearm/W1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -316,8 +316,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/wrist/W2.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -344,8 +344,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/grippers/GRIPPER.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -371,8 +371,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/upper_shoulder/S0.STL" />
         </geometry>
-        <material name="blue">
-          <color rgba="0 0 1 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -399,8 +399,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/lower_shoulder/S1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -427,8 +427,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/upper_elbow/E0.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -455,8 +455,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/lower_elbow/E1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -483,8 +483,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/upper_forearm/W0.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -511,8 +511,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/lower_forearm/W1.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
         </material>
       </visual>
       <collision>
@@ -539,8 +539,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/wrist/W2.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -567,8 +567,8 @@
         <geometry>
           <mesh filename="package://baxter_description/meshes/grippers/GRIPPER.STL" />
         </geometry>
-        <material name="yellow">
-          <color rgba="1 1 0 1" />
+        <material name="darkred">
+          <color rgba=".5 .1 .1 1" />
         </material>
       </visual>
       <collision>
@@ -590,7 +590,7 @@
     <joint name="world_to_base" type="fixed">
       <parent link="world" />
       <child link="base_link" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 .924" rpy="0 0 0" />
     </joint>
 
     <!-- head - screen -->
@@ -783,5 +783,6 @@
   </xacro:macro>
 
 
-  <!--xacro:baxter name="baxter" /-->
+  <!--xacro:baxter
+  name="baxter" /-->
 </robot>
