@@ -16,10 +16,6 @@
                     <mesh
                         filename="package://baxter_description/meshes/electric_gripper/electric_gripper_base.DAE" />
                 </geometry>
-                <geometry>
-                    <mesh
-                        filename="package://baxter_description/meshes/electric_gripper/electric_gripper_base.DAE" />
-                </geometry>
             </visual>
             <collision>
                 <origin rpy="${-pi/2} ${pi} 0" xyz="0.0 0.0 0" />
