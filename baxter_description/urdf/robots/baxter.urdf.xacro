@@ -777,8 +777,8 @@
 
     <xacro:if value="${use_sensors}">
       <xacro:imu parent="base_link" frame="imu_link" />
-      <xacro:lidar parent="base_link" frame="lidar_link" />
-      <xacro:camera_color parent="base_link" frame="camera_link" />
+      <xacro:lidar parent="hat" frame="lidar_link" />
+      <xacro:camera_color parent="screen" frame="camera_link" />
     </xacro:if>
   </xacro:macro>
 

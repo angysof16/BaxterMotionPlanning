@@ -1,28 +1,36 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="camera_color" params="parent frame">
+
     <link name="${frame}">
+
       <visual>
+        <origin rpy="0 1.5708 0" xyz="0 0 0" />
         <geometry>
-          <box size="0.05 0.05 0.05" />
+          <cylinder length="0.005" radius="0.009" />
         </geometry>
+        <material name="cam_lens">
+          <color rgba="0.05 0.05 0.05 1" />
+        </material>
       </visual>
+
       <collision>
+        <origin rpy="0 1.5708 0" xyz="0 0 0" />
         <geometry>
-          <box size="0.05 0.05 0.05" />
+          <box size="0.04 0.025 0.02" />
         </geometry>
       </collision>
       <inertial>
-        <!-- TODO_FILL_MASS -->
         <mass value="0.1" />
-        <!-- TODO_FILL_INERTIA -->
         <inertia ixx="1e-3" ixy="0.0" ixz="0.0" iyy="1e-3" iyz="0.0" izz="1e-3"/>
       </inertial>
     </link>
+
     <joint name="${frame}_joint" type="fixed">
       <parent link="${parent}" />
       <child link="${frame}" />
-      <origin rpy="0 0 0" xyz=".15 0 .3" />
+      <origin rpy="0 .26 0" xyz=".05 0 .065" />
     </joint>
+
   </xacro:macro>
 </robot>

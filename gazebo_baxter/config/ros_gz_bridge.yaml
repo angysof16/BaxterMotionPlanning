@@ -1,4 +1,3 @@
-# TODO_BRIDGE: Complete ROS <-> Gazebo topic mappings
 - ros_topic_name: /scan
   gz_topic_name: /scan
   ros_type_name: sensor_msgs/msg/LaserScan

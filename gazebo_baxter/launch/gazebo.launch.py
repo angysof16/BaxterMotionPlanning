@@ -67,16 +67,15 @@ ARGUMENTS = [
 
 
 def get_robot_description():
-    # ── Package paths ──────────────────────────────────────────────────────────
+    # Package paths
     pkg_gazebo = get_package_share_directory("gazebo_baxter")
     pkg_urdf = get_package_share_directory("baxter_description")
 
-    # ── Process xacro ─────────────────────────────────────────────────────────
+    # Process xacro
     urdf_path = os.path.join(pkg_gazebo, "urdf", "robots", "baxter_gazebo.urdf.xacro")
     robot_description_config = process_file(urdf_path, mappings={})
     robot_desc = robot_description_config.toprettyxml(indent="  ")
 
-    # Replace package:// URIs with absolute file:// paths so Gazebo finds meshes
     robot_desc = robot_desc.replace("package://baxter_description/", f"file://{pkg_urdf}/")
     return robot_desc
 
@@ -84,12 +83,12 @@ def get_robot_description():
 def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
 
-    # ── Package paths ──────────────────────────────────────────────────────────
+    # Package paths
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
     pkg_gazebo = get_package_share_directory("gazebo_baxter")
     pkg_urdf = get_package_share_directory("baxter_description")
 
-    # ── Paths ─────────────────────────────────────────────────────────────────
+    # Paths
     gz_launch_path = PathJoinSubstitution(
         [pkg_ros_gz_sim, "launch", "gz_sim.launch.py"]
     )
@@ -98,7 +97,7 @@ def generate_launch_description():
     )
     bridge_config_path = os.path.join(pkg_gazebo, "config", "ros_gz_bridge.yaml")
 
-    # ── Resource paths for Gazebo (meshes + models) ───────────────────────────
+    # Resource paths for Gazebo (meshes + models)
     ld.add_action(
         AppendEnvironmentVariable(
             "GZ_SIM_RESOURCE_PATH",
