@@ -10,7 +10,7 @@
                 <origin rpy="0 0 ${-pi/2*(reflect+1)}" xyz="0 0 0" />
                 <geometry>
                     <mesh
-                        filename="package://baxter_description/meshes/electric_gripper/fingers/extended_narrow.DAE" />
+                        filename="package://baxter_description/meshes/electric_gripper/fingers/extended_narrow.STL" />
                 </geometry>
             </visual>
 
@@ -26,7 +26,7 @@
                 </geometry>
             </collision>
 
-            <!-- Nudillo -->
+            <!-- knuckle -->
             <xacro:property name="knuckle_box_height" value="0.01" scope="local" />
             <xacro:property name="knuckle_box_width" value="0.017" scope="local" />
             <xacro:property name="knuckle_box_length" value="${finger_width + 0.03275}"
