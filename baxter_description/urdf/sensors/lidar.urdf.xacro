@@ -28,7 +28,7 @@
     <joint name="${frame}_joint" type="fixed">
       <parent link="${parent}" />
       <child link="${frame}" />
-      <origin rpy="0 0 0" xyz="0 0 .04" />
+      <origin rpy="0 0 0" xyz="0 0 .043" />
     </joint>
 
   </xacro:macro>

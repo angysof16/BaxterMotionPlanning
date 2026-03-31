@@ -18,22 +18,6 @@ This project brings Rethink Robotics' Baxter robot into a modern ROS2 stack. The
     <img height="500" alt="Image" src="https://github.com/user-attachments/assets/e53076b4-87a3-45d0-976b-5db25c7f14a2" />
 </div>
 
-
-The custom action interface:
-
-```
-# MoveArm.action
-geometry_msgs/Pose target_pose
-float64 position_tolerance
----
-bool success
-string message
-float64 execution_time_sec
----
-float64 completion_percentage
-string current_phase  # "planning" | "executing" | "done"
-```
-
 ---
 
 ## Repository Structure
@@ -98,10 +82,27 @@ ros2 launch gazebo_baxter gazebo.launch.py
 ```bash
 ros2 launch baxter_description display.launch.py
 ```
+---
+
+## Troubleshooting
+
+### LiDAR not showing in Gazebo simulation?
+
+If you see the error:
+```bash
+[GUI] [Err] [VisualizeLidar.cc:285] The lidar entity with topic '[/scan]' could not be found.
+```
+This is a known issue where Gazebo doesn't automatically visualize GPU LiDAR sensors. To fix it, manually list the sensor link:
+```bash
+gz model -m baxter -l lidar_sensor
+```
+>Note: This command needs to be run after Gazebo is launched. The sensor will be visible in the GUI after executing the command.
+
+See this <a href="https://robotics.stackexchange.com/questions/118158/entity-spawning-issue-ros-gz-sim-solved-by-listing-link-potentially-bug">StackExchange discussion </a> for more details.
 
 ---
 
-## Roadmap
+## Project Roadmap
 
 | Phase | Description | Status |
 |-------|-------------|--------|
