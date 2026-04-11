@@ -1,0 +1,118 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    # strict_mode: true
+    # es read_only?
+
+    # joint_states
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    right_arm_controller:
+      type: position_controllers/JointTrajectoryController
+
+    left_arm_controller:
+      type: position_controllers/JointTrajectoryController
+    
+    head_controller:
+      type: position_controllers/JointTrajectoryController
+    
+    right_gripper_controller:
+      type: position_controllers/GripperActionController
+    
+    left_gripper_controller:
+      type: position_controllers/GripperActionController
+
+# JOint state broadcaster
+joint_state_broadcaster:
+  ros__parameters:
+    joints:
+    # HEAD
+    - torso_head
+    
+    #RIGHT ARM
+    - torso_right_upper_shoulder
+    - right_upper_shoulder_lower_shoulder
+    - right_lower_shoulder_upper_elbow
+    - right_upper_elbow_lower_elbow
+    - right_lower_elbow_upper_forearm
+    - right_upper_forearm_lower_forearm
+    - right_lower_forearm_wrist
+
+    # LEFT ARM
+    - torso_left_upper_shoulder
+    - left_upper_shoulder_lower_shoulder
+    - left_lower_shoulder_upper_elbow
+    - left_upper_elbow_lower_elbow
+    - left_lower_elbow_upper_forearm
+    - left_upper_forearm_lower_forearm
+    - left_lower_forearm_wrist
+
+    # RIGHT AND LEFT GRIPPERS
+    - r_gripper_l_finger_joint
+    - l_gripper_l_finger_joint
+
+
+# CONTROLLERS
+right_arm_controllers:
+  ros__parameters:
+    joints:
+    - torso_right_upper_shoulder
+    - right_upper_shoulder_lower_shoulder
+    - right_lower_shoulder_upper_elbow
+    - right_upper_elbow_lower_elbow
+    - right_lower_elbow_upper_forearm
+    - right_upper_forearm_lower_forearm
+    - right_lower_forearm_wrist
+  
+  command_interfaces:
+    - position
+  
+  state_interfaces:
+    - position
+    - velocity
+
+  state_publish_rate: 50
+  action_monitor_rate: 20
+
+
+left_arm_controllers:
+  ros__parameters:
+    joints:
+    - torso_left_upper_shoulder
+    - left_upper_shoulder_lower_shoulder
+    - left_lower_shoulder_upper_elbow
+    - left_upper_elbow_lower_elbow
+    - left_lower_elbow_upper_forearm
+    - left_upper_forearm_lower_forearm
+    - left_lower_forearm_wrist
+  
+  command_interfaces:
+    - position
+  
+  state_interfaces:
+    - position
+    - velocity
+
+right_gripper_controller:
+  ros__parameters:
+    joints:
+    - r_gripper_l_finger_joint
+
+left_gripper_controller:
+  ros__parameters:
+    joints:
+    - l_gripper_l_finger_joint
+
+
+head_controller:
+  ros__parameters:
+    joints:
+    - torso_head
+  
+  command_interfaces:
+    - position
+  
+  state_interfaces:
+    - position
+    - velocity
