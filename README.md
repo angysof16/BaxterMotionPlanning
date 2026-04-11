@@ -121,5 +121,6 @@ See this <a href="https://robotics.stackexchange.com/questions/118158/entity-spa
 - [ROS2 Jazzy docs](https://docs.ros.org/en/jazzy/)
 - [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/)
 - [MoveIt2](https://moveit.picknik.ai/)
+- [ros2_control documentation](https://control.ros.org/jazzy/index.html)
 - [rmw_zenoh](https://github.com/ros2/rmw_zenoh)
-- Macenski et al., *Robot Operating System 2: Design, architecture, and uses in the wild*, Science Robotics, 2022
+- Macenski et al., <a href="https://arxiv.org/pdf/2211.07752"> Robot Operating System 2: Design, architecture, and uses in the wild</a>, Science Robotics, 2022
