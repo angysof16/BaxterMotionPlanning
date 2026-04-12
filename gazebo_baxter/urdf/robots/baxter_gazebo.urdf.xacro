@@ -23,6 +23,177 @@
         sensor_name="camera_sensor" />
     </xacro:if>
 
+    <!-- ROS2 CONTROL CONFIGURATION -->
+    <ros2_control name="BaxterGazeboSystem" type="system">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </hardware>
+
+      <!-- HEAD JOINT -->
+      <joint name="torso_head">
+        <command_interface name="position">
+          <param name="min">-0.7854</param>
+          <param name="max">0.7854</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <!-- RIGHT ARM JOINTS -->
+      <joint name="torso_right_upper_shoulder">
+        <command_interface name="position">
+          <param name="min">-0.89</param>
+          <param name="max">1.5708</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_upper_shoulder_lower_shoulder">
+        <command_interface name="position">
+          <param name="min">-1.0472</param>
+          <param name="max">0.5236</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_lower_shoulder_upper_elbow">
+        <command_interface name="position">
+          <param name="min">-1.5708</param>
+          <param name="max">1.5708</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_upper_elbow_lower_elbow">
+        <command_interface name="position">
+          <param name="min">-1.5708</param>
+          <param name="max">0.0524</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_lower_elbow_upper_forearm">
+        <command_interface name="position">
+          <param name="min">-3.0543</param>
+          <param name="max">3.0543</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_upper_forearm_lower_forearm">
+        <command_interface name="position">
+          <param name="min">-1.5708</param>
+          <param name="max">1.5708</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="right_lower_forearm_wrist">
+        <command_interface name="position">
+          <param name="min">-3.0543</param>
+          <param name="max">3.0543</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <!-- LEFT ARM JOINTS -->
+      <joint name="torso_left_upper_shoulder">
+        <command_interface name="position">
+          <param name="min">-1.5708</param>
+          <param name="max">0.89</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="left_upper_shoulder_lower_shoulder">
+        <command_interface name="position">
+          <param name="min">-0.5236</param>
+          <param name="max">1.0472</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="left_lower_shoulder_upper_elbow">
+        <command_interface name="position">
+          <param name="min">-1.5708</param>
+          <param name="max">1.5708</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="left_upper_elbow_lower_elbow">
+        <command_interface name="position">
+          <param name="min">-0.0524</param>
+          <param name="max">1.5708</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="left_lower_elbow_upper_forearm">
+        <command_interface name="position">
+          <param name="min">-3.0543</param>
+          <param name="max">3.0543</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="left_upper_forearm_lower_forearm">
+        <command_interface name="position">
+          <param name="min">-1.5708</param>
+          <param name="max">1.5708</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="left_lower_forearm_wrist">
+        <command_interface name="position">
+          <param name="min">-3.0543</param>
+          <param name="max">3.0543</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <!-- GRIPPER JOINTS (optional - for future gripper control) -->
+      <joint name="r_gripper_l_finger_joint">
+        <command_interface name="position">
+          <param name="min">0.0</param>
+          <param name="max">0.020833</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="l_gripper_l_finger_joint">
+        <command_interface name="position">
+          <param name="min">0.0</param>
+          <param name="max">0.020833</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+
+    </ros2_control>
+
+    <!-- GAZEBO ROS2 CONTROL PLUGIN -->
+    <gazebo>
+      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find gazebo_baxter)/config/controllers.yaml</parameters>
+      </plugin>
+    </gazebo>
 
     <!-- Joint State Publisher Plugin -->
     <gazebo>
@@ -30,85 +201,6 @@
         name="gz::sim::systems::JointStatePublisher">
       </plugin>
     </gazebo>
-
-    <!-- Joint Position Controller Plugin for each joint -->
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>torso_head</joint_name>
-        <topic>/model/baxter/joint/torso_head/cmd_pos</topic>
-        <p_gain>10</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>0.5</d_gain>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>torso_left_upper_shoulder</joint_name>
-        <topic>/model/baxter/joint/torso_left_upper_shoulder/cmd_pos</topic>
-        <p_gain>50</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>1.0</d_gain>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>left_upper_shoulder_lower_shoulder</joint_name>
-        <topic>/model/baxter/joint/left_upper_shoulder_lower_shoulder/cmd_pos</topic>
-        <p_gain>50</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>1.0</d_gain>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>left_lower_shoulder_upper_elbow</joint_name>
-        <topic>/model/baxter/joint/left_lower_shoulder_upper_elbow/cmd_pos</topic>
-        <p_gain>50</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>1.0</d_gain>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>torso_right_upper_shoulder</joint_name>
-        <topic>/model/baxter/joint/torso_right_upper_shoulder/cmd_pos</topic>
-        <p_gain>50</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>1.0</d_gain>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>right_upper_shoulder_lower_shoulder</joint_name>
-        <topic>/model/baxter/joint/right_upper_shoulder_lower_shoulder/cmd_pos</topic>
-        <p_gain>50</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>1.0</d_gain>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="gz-sim-joint-position-controller-system"
-        name="gz::sim::systems::JointPositionController">
-        <joint_name>right_lower_shoulder_upper_elbow</joint_name>
-        <topic>/model/baxter/joint/right_lower_shoulder_upper_elbow/cmd_pos</topic>
-        <p_gain>50</p_gain>
-        <i_gain>0.1</i_gain>
-        <d_gain>1.0</d_gain>
-      </plugin>
-    </gazebo>
-
 
   </xacro:macro>
 

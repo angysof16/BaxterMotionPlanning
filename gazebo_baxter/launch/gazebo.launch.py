@@ -6,7 +6,10 @@ from launch.actions import (
     DeclareLaunchArgument,
     SetEnvironmentVariable,
     IncludeLaunchDescription,
+    RegisterEventHandler,
+    TimerAction,
 )
+from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
@@ -117,7 +120,7 @@ def generate_launch_description():
         )
     )
 
-    # ── Gazebo Harmonic ───────────────────────────────────────────────────────
+    # Gazebo Harmonic
     ld.add_action(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gz_launch_path),
@@ -128,7 +131,7 @@ def generate_launch_description():
         )
     )
 
-    # ── /clock bridge (always needed) ─────────────────────────────────────────
+    # /clock bridge (always needed)
     ld.add_action(
         Node(
             package="ros_gz_bridge",
@@ -139,51 +142,49 @@ def generate_launch_description():
         )
     )
 
-    # ── Robot State Publisher ─────────────────────────────────────────────────
-    ld.add_action(
-        Node(
-            package="robot_state_publisher",
-            executable="robot_state_publisher",
-            name="robot_state_publisher",
-            output="both",
-            parameters=[
-                {
-                    "use_sim_time": LaunchConfiguration("use_sim_time"),
-                    "publish_frequency": LaunchConfiguration("rsp_frequency"),
-                    "robot_description": get_robot_description(),
-                }
-            ],
-        )
+    # Robot State Publisher
+    robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        name="robot_state_publisher",
+        output="both",
+        parameters=[
+            {
+                "use_sim_time": LaunchConfiguration("use_sim_time"),
+                "publish_frequency": LaunchConfiguration("rsp_frequency"),
+                "robot_description": get_robot_description(),
+            }
+        ],
     )
+    ld.add_action(robot_state_publisher)
 
-    # ── Spawn Baxter in Gazebo ────────────────────────────────────────────────
-    ld.add_action(
-        Node(
-            package="ros_gz_sim",
-            executable="create",
-            arguments=[
-                "-name",
-                LaunchConfiguration("entity"),
-                "-topic",
-                LaunchConfiguration("robot_description_topic"),
-                "-x",
-                LaunchConfiguration("initial_pose_x"),
-                "-y",
-                LaunchConfiguration("initial_pose_y"),
-                "-z",
-                LaunchConfiguration("initial_pose_z"),
-                "-R",
-                "0",
-                "-P",
-                "0",
-                "-Y",
-                LaunchConfiguration("initial_pose_yaw"),
-            ],
-            output="screen",
-        )
+    # Spawn Baxter in Gazebo
+    spawn_robot = Node(
+        package="ros_gz_sim",
+        executable="create",
+        arguments=[
+            "-name",
+            LaunchConfiguration("entity"),
+            "-topic",
+            LaunchConfiguration("robot_description_topic"),
+            "-x",
+            LaunchConfiguration("initial_pose_x"),
+            "-y",
+            LaunchConfiguration("initial_pose_y"),
+            "-z",
+            LaunchConfiguration("initial_pose_z"),
+            "-R",
+            "0",
+            "-P",
+            "0",
+            "-Y",
+            LaunchConfiguration("initial_pose_yaw"),
+        ],
+        output="screen",
     )
+    ld.add_action(spawn_robot)
 
-    # ── Full sensor/topic bridge ──────────────────────────────────────────────
+    # Full sensor/topic bridge
     bridge_config = ReplaceString(
         source_file=bridge_config_path,
         replacements={"<entity>": LaunchConfiguration("entity")},
@@ -195,6 +196,77 @@ def generate_launch_description():
             output="screen",
             parameters=[{"config_file": bridge_config}],
             condition=IfCondition(LaunchConfiguration("ros_bridge")),
+        )
+    )
+
+    # ROS2 CONTROL - CONTROLLER SPAWNERS
+    
+    # Joint State Broadcaster - spawns immediately after robot
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        output="screen",
+    )
+
+    # Spawn Joint State Broadcaster after robot is spawned
+    ld.add_action(
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=spawn_robot,
+                on_exit=[joint_state_broadcaster_spawner],
+            )
+        )
+    )
+
+    # Right Arm Controller - spawns after joint state broadcaster
+    right_arm_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["right_arm_controller", "--controller-manager", "/controller_manager"],
+        output="screen",
+    )
+
+    ld.add_action(
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=joint_state_broadcaster_spawner,
+                on_exit=[right_arm_controller_spawner],
+            )
+        )
+    )
+
+    # Left Arm Controller - spawns after right arm controller
+    left_arm_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["left_arm_controller", "--controller-manager", "/controller_manager"],
+        output="screen",
+    )
+
+    ld.add_action(
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=right_arm_controller_spawner,
+                on_exit=[left_arm_controller_spawner],
+            )
+        )
+    )
+
+    # Head Controller - spawns after left arm controller
+    head_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["head_controller", "--controller-manager", "/controller_manager"],
+        output="screen",
+    )
+
+    ld.add_action(
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=left_arm_controller_spawner,
+                on_exit=[head_controller_spawner],
+            )
         )
     )
 
