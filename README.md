@@ -177,11 +177,6 @@ ros2 action send_goal /head_controller/follow_joint_trajectory \
 If `ros2 control list_controllers` shows `joint_state_broadcaster` as `inactive`, activate it manually:
 
 ```bash
-ros2 control set_controller_state joint_state_broadcaster activate
-```
-
-Or use:
-```bash
 ros2 control switch_controllers --activate joint_state_broadcaster
 ```
 
