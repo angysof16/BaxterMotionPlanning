@@ -32,7 +32,7 @@ def generate_launch_description():
     ld.add_action(
         IncludeLaunchDescription(
             PathJoinSubstitution(
-                [FindPackageShare("urdf_launch"), "launch", "display.launch.py"]
+                [FindPackageShare("baxter_description"), "launch", "display.launch.py"]
             ),
             launch_arguments={
                 "urdf_package": "baxter_description",
