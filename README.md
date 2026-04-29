@@ -69,6 +69,7 @@ baxter/src/
 ### 1. Clone and build
 
 ```bash
+source /opt/ros/jazzy/setup.bash
 git clone https://github.com/angysof16/BaxterMotionPlanning.git
 cd BaxterMotionPlanning
 colcon build --symlink-install
