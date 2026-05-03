@@ -2,7 +2,7 @@
 
 Baxter robot simulation in ROS2 Jazzy + Gazebo Harmonic, with a roadmap toward distributed motion planning via a custom ROS2 Action interface and Zenoh as RMW bridge.
 
-> **Status:** Phase 2 complete - ros2_control integrated. <br/> Phase 3 (MoveIt2) in progress.
+> **Status:** Phase 3 complete - MoveIt2 motion planning integrated and functional. <br/> Phase 4 (Custom MoveArm action interface) next.
 
 ---
 
@@ -38,15 +38,28 @@ baxter/src/
     │   │   └── sensors/            # Camera RGB, RGBD, IMU, LiDAR
     │   └── worlds/
     │       └── empty.sdf
-    └── baxter_description/             # URDF visualization + meshes
+    ├── baxter_description/             # URDF visualization + meshes
+    │   ├── launch/
+    │   │   └── display.launch.py
+    │   ├── meshes/                 # STL/DAE files per link
+    │   └── urdf/
+    │       ├── robots/
+    │       │   ├── baxter.urdf.xacro
+    │       │   └── baxter_standalone.urdf.xacro
+    │       └── sensors/
+    └── baxter_moveit_config/           # MoveIt2 configuration
+        ├── config/
+        │   ├── baxter.srdf
+        │   ├── joint_limits.yaml
+        │   ├── kinematics.yaml
+        │   ├── moveit_controllers.yaml
+        │   ├── ompl_planning.yaml
+        │   └── pilz_cartesian_limits.yaml
         ├── launch/
-        │   └── display.launch.py
-        ├── meshes/                 # STL/DAE files per link
-        └── urdf/
-            ├── robots/
-            │   ├── baxter.urdf.xacro
-            │   └── baxter_standalone.urdf.xacro
-            └── sensors/
+        │   ├── demo.launch.py          # Full MoveIt2 + Gazebo demo
+        │   └── move_group.launch.py    # MoveIt2 move_group only
+        └── rviz/
+            └── moveit.rviz
 ```
 
 ---
@@ -61,6 +74,11 @@ baxter/src/
 - `ros-jazzy-ros2-control`
 - `ros-jazzy-ros2-controllers`
 - `ros-jazzy-gz-ros2-control`
+- **MoveIt2:**
+  - `ros-jazzy-moveit`
+  - `ros-jazzy-moveit-ros-control-interface`
+  - `ros-jazzy-moveit-planners-ompl`
+  - `ros-jazzy-moveit-simple-controller-manager`
 
 ---
 
@@ -76,21 +94,39 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-### 2. Launch simulation
+### 2. Launch simulation (Gazebo only)
 
 ```bash
 ros2 launch gazebo_baxter gazebo.launch.py
 ```
 
-### 3. Verify controllers are active
+### 3. Launch with MoveIt2 (recommended for motion planning)
 
-In another terminal:
+```bash
+ros2 launch baxter_moveit_config demo.launch.py
+```
+
+This launches:
+- Gazebo Harmonic simulation
+- ros2_control controllers
+- MoveIt2 move_group node
+- RViz2 with MoveIt plugin
+
+---
+
+## Usage
+
+### Verifying Controllers
+
+Before sending any commands (via action calls or MoveIt2), always verify that controllers are active. Controller activation can sometimes fail during launch.
+
+**Check controller status:**
 
 ```bash
 ros2 control list_controllers
 ```
 
-Expected output:
+**Expected output:**
 ```
 head_controller         joint_trajectory_controller/JointTrajectoryController  active
 left_arm_controller     joint_trajectory_controller/JointTrajectoryController  active
@@ -98,17 +134,30 @@ right_arm_controller    joint_trajectory_controller/JointTrajectoryController  a
 joint_state_broadcaster joint_state_broadcaster/JointStateBroadcaster          active
 ```
 
-### 4. Visualize URDF
-
-```bash
-ros2 launch baxter_description display.launch.py
-```
+All controllers should show **`active`** status. If any controller shows `inactive` or `unconfigured`, see the [Troubleshooting](#troubleshooting) section below.
 
 ---
 
-## Usage
+### Using MoveIt2 (Interactive Planning)
 
-### Testing the Controllers
+1. Launch the demo (if you haven't already):
+   ```bash
+   ros2 launch baxter_moveit_config demo.launch.py
+   ```
+
+2. In RViz:
+   - Select Planning Group: `right_arm` or `left_arm`
+   - Drag the interactive marker to set a goal pose
+   - Click Plan to compute a trajectory
+   - Click Execute to run it on the robot
+
+3. The robot in Gazebo should move to match the planned trajectory.
+
+---
+
+### Testing Controllers via Action Calls (Command Line)
+
+If you prefer to test controllers directly via action calls:
 
 #### Move Right Arm
 
@@ -171,17 +220,29 @@ ros2 action send_goal /head_controller/follow_joint_trajectory \
 
 ---
 
-## Troubleshooting
-
-### joint_state_broadcaster stays inactive?
-
-If `ros2 control list_controllers` shows `joint_state_broadcaster` as `inactive`, activate it manually:
+### Visualize URDF in RViz2 (without Gazebo)
 
 ```bash
-ros2 control switch_controllers --activate joint_state_broadcaster
+ros2 launch baxter_description display.launch.py
 ```
 
-Verify all controllers are active:
+---
+
+## Troubleshooting
+
+### Controllers not activating automatically?
+
+If `ros2 control list_controllers` shows any controller as `inactive` or `unconfigured`, activate them manually:
+
+```bash
+ros2 control switch_controllers \
+  --activate joint_state_broadcaster \
+  --activate right_arm_controller \
+  --activate left_arm_controller \
+  --activate head_controller
+```
+
+Verify all controllers are now active:
 ```bash
 ros2 control list_controllers
 ```
@@ -210,10 +271,10 @@ See this <a href="https://robotics.stackexchange.com/questions/118158/entity-spa
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Baxter URDF + Gazebo Harmonic simulation | Done |
-| 2 | `ros2_control` integration + joint trajectory controller | Done |
-| 3 | MoveIt2 motion planning for pick & place | In progress |
-| 4 | Custom `MoveArm` action interface | Planned |
+| 1 | Baxter URDF + Gazebo Harmonic simulation | ✅ Done |
+| 2 | `ros2_control` integration + joint trajectory controller | ✅ Done |
+| 3 | MoveIt2 motion planning for pick & place | ✅ Done |
+| 4 | Custom `MoveArm` action interface | In progress |
 | 5 | Zenoh RMW bridge - two-machine architecture | Planned |
 | 6 | Wii Remote teleoperation via `joy` + custom ROS2 node | Planned |
 | 7 | FastDDS vs Zenoh latency benchmarks | Possible |
@@ -226,5 +287,6 @@ See this <a href="https://robotics.stackexchange.com/questions/118158/entity-spa
 - [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/)
 - [MoveIt2](https://moveit.picknik.ai/)
 - [ros2_control documentation](https://control.ros.org/jazzy/index.html)
+- [MoveIt2 + ros2_control tutorial](https://moveit.picknik.ai/jazzy/doc/examples/controller_configuration/controller_configuration_tutorial.html)
 - [rmw_zenoh](https://github.com/ros2/rmw_zenoh)
-- Macenski et al., <a href="https://arxiv.org/pdf/2211.07752"> Robot Operating System 2: Design, architecture, and uses in the wild</a>, Science Robotics, 2022
+- Macenski et al., <a href="https://arxiv.org/pdf/2211.07752"> Robot Operating System 2: Design, architecture, and uses in the wild</a>, Science Robotics, 2022     
