@@ -1,7 +1,15 @@
+# MoveIt uses ros2_control via this interface
+moveit_controller_manager: moveit_ros_control_interface/MoveItControllerManager
+
+# Namespace where controller_manager is running
+controller_manager_name: /controller_manager
+
+# List of controllers
 controller_names:
   - right_arm_controller
   - left_arm_controller
 
+# Controller specifications
 right_arm_controller:
   type: FollowJointTrajectory
   action_ns: follow_joint_trajectory
