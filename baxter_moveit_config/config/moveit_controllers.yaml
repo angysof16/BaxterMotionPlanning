@@ -1,0 +1,29 @@
+controller_names:
+  - right_arm_controller
+  - left_arm_controller
+
+right_arm_controller:
+  type: FollowJointTrajectory
+  action_ns: follow_joint_trajectory
+  default: true
+  joints:
+    - torso_right_upper_shoulder
+    - right_upper_shoulder_lower_shoulder
+    - right_lower_shoulder_upper_elbow
+    - right_upper_elbow_lower_elbow
+    - right_lower_elbow_upper_forearm
+    - right_upper_forearm_lower_forearm
+    - right_lower_forearm_wrist
+
+left_arm_controller:
+  type: FollowJointTrajectory
+  action_ns: follow_joint_trajectory
+  default: true
+  joints:
+    - torso_left_upper_shoulder
+    - left_upper_shoulder_lower_shoulder
+    - left_lower_shoulder_upper_elbow
+    - left_upper_elbow_lower_elbow
+    - left_lower_elbow_upper_forearm
+    - left_upper_forearm_lower_forearm
+    - left_lower_forearm_wrist

@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<robot name="baxter">
+
+    <!-- PLANNING GROUPS -->
+
+    <group name="right_arm">
+        <joint name="torso_right_upper_shoulder" />
+        <joint name="right_upper_shoulder_lower_shoulder" />
+        <joint name="right_lower_shoulder_upper_elbow" />
+        <joint name="right_upper_elbow_lower_elbow" />
+        <joint name="right_lower_elbow_upper_forearm" />
+        <joint name="right_upper_forearm_lower_forearm" />
+        <joint name="right_lower_forearm_wrist" />
+    </group>
+
+    <group name="left_arm">
+        <joint name="torso_left_upper_shoulder" />
+        <joint name="left_upper_shoulder_lower_shoulder" />
+        <joint name="left_lower_shoulder_upper_elbow" />
+        <joint name="left_upper_elbow_lower_elbow" />
+        <joint name="left_lower_elbow_upper_forearm" />
+        <joint name="left_upper_forearm_lower_forearm" />
+        <joint name="left_lower_forearm_wrist" />
+    </group>
+
+    <!-- END EFFECTORS -->
+
+    <end_effector name="right_gripper" parent_link="right_hand" group="right_arm" />
+    <end_effector name="left_gripper" parent_link="left_hand" group="left_arm" />
+
+    <!-- DEFAULT POSES -->
+
+    <group_state name="home" group="right_arm">
+        <joint name="torso_right_upper_shoulder" value="0" />
+        <joint name="right_upper_shoulder_lower_shoulder" value="0" />
+        <joint name="right_lower_shoulder_upper_elbow" value="0" />
+        <joint name="right_upper_elbow_lower_elbow" value="0" />
+        <joint name="right_lower_elbow_upper_forearm" value="0" />
+        <joint name="right_upper_forearm_lower_forearm" value="0" />
+        <joint name="right_lower_forearm_wrist" value="0" />
+    </group_state>
+
+    <group_state name="home" group="left_arm">
+        <joint name="torso_left_upper_shoulder" value="0" />
+        <joint name="left_upper_shoulder_lower_shoulder" value="0" />
+        <joint name="left_lower_shoulder_upper_elbow" value="0" />
+        <joint name="left_upper_elbow_lower_elbow" value="0" />
+        <joint name="left_lower_elbow_upper_forearm" value="0" />
+        <joint name="left_upper_forearm_lower_forearm" value="0" />
+        <joint name="left_lower_forearm_wrist" value="0" />
+    </group_state>
+
+    <!-- DISABLE COLLISIONS -->
+
+    <disable_collisions link1="camera_link" link2="screen" reason="Adjacent" />
+    <disable_collisions link1="hat" link2="lidar_link" reason="Adjacent" />
+    <disable_collisions link1="l_gripper_l_finger" link2="l_gripper_l_finger_tip" reason="Adjacent" />
+    <disable_collisions link1="l_gripper_l_finger" link2="l_gripper_r_finger" reason="Default" />
+    <disable_collisions link1="l_gripper_l_finger" link2="left_gripper_base" reason="Adjacent" />
+    <disable_collisions link1="l_gripper_r_finger" link2="l_gripper_r_finger_tip" reason="Adjacent" />
+    <disable_collisions link1="l_gripper_r_finger" link2="left_gripper_base" reason="Adjacent" />
+    <disable_collisions link1="left_gripper_base" link2="left_wrist" reason="Never" />
+    <disable_collisions link1="r_gripper_l_finger" link2="r_gripper_l_finger_tip" reason="Adjacent" />
+    <disable_collisions link1="r_gripper_l_finger" link2="r_gripper_r_finger" reason="Default" />
+    <disable_collisions link1="r_gripper_l_finger" link2="right_gripper_base" reason="Adjacent" />
+    <disable_collisions link1="r_gripper_r_finger" link2="r_gripper_r_finger_tip" reason="Adjacent" />
+    <disable_collisions link1="r_gripper_r_finger" link2="right_gripper_base" reason="Adjacent" />
+    <disable_collisions link1="right_gripper_base" link2="right_wrist" reason="Never" />
+    <disable_collisions link1="screen" link2="torso" reason="Never" />
+
+    <!-- Base -->
+    <disable_collisions link1="base_link" link2="torso" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="imu_link" reason="Adjacent" />
+    <disable_collisions link1="torso" link2="head" reason="Adjacent" />
+    <disable_collisions link1="torso" link2="imu_link" reason="Never" />
+    <disable_collisions link1="head" link2="screen" reason="Adjacent" />
+    <disable_collisions link1="head" link2="hat" reason="Adjacent" />
+    <disable_collisions link1="head" link2="lidar_link" reason="Never" />
+    <disable_collisions link1="hat" link2="head" reason="Adjacent" />
+
+    <!-- Right arm -->
+    <disable_collisions link1="torso" link2="right_upper_shoulder" reason="Adjacent" />
+    <disable_collisions link1="right_upper_shoulder" link2="right_lower_shoulder" reason="Adjacent" />
+    <disable_collisions link1="right_lower_shoulder" link2="right_upper_elbow" reason="Adjacent" />
+    <disable_collisions link1="right_upper_elbow" link2="right_lower_elbow" reason="Adjacent" />
+    <disable_collisions link1="right_lower_elbow" link2="right_upper_forearm" reason="Adjacent" />
+    <disable_collisions link1="right_upper_forearm" link2="right_lower_forearm" reason="Adjacent" />
+    <disable_collisions link1="right_lower_forearm" link2="right_wrist" reason="Adjacent" />
+    <disable_collisions link1="right_wrist" link2="right_hand" reason="Adjacent" />
+    <disable_collisions link1="right_hand" link2="right_gripper_base" reason="Adjacent" />
+    <disable_collisions link1="right_gripper_base" link2="r_gripper_l_finger" reason="Adjacent" />
+    <disable_collisions link1="right_gripper_base" link2="r_gripper_r_finger" reason="Adjacent" />
+    <disable_collisions link1="right_gripper_base" link2="right_gripper" reason="Adjacent" />
+
+    <!-- Right arm -->
+    <disable_collisions link1="torso" link2="right_lower_shoulder" reason="Never" />
+    <disable_collisions link1="right_upper_shoulder" link2="right_upper_elbow" reason="Never" />
+    <disable_collisions link1="right_lower_shoulder" link2="right_lower_elbow" reason="Never" />
+    <disable_collisions link1="right_upper_elbow" link2="right_upper_forearm" reason="Never" />
+    <disable_collisions link1="right_lower_elbow" link2="right_lower_forearm" reason="Never" />
+    <disable_collisions link1="right_upper_forearm" link2="right_wrist" reason="Never" />
+    <disable_collisions link1="right_lower_forearm" link2="right_hand" reason="Never" />
+
+    <!-- Left arm  -->
+    <disable_collisions link1="torso" link2="left_upper_shoulder" reason="Adjacent" />
+    <disable_collisions link1="left_upper_shoulder" link2="left_lower_shoulder" reason="Adjacent" />
+    <disable_collisions link1="left_lower_shoulder" link2="left_upper_elbow" reason="Adjacent" />
+    <disable_collisions link1="left_upper_elbow" link2="left_lower_elbow" reason="Adjacent" />
+    <disable_collisions link1="left_lower_elbow" link2="left_upper_forearm" reason="Adjacent" />
+    <disable_collisions link1="left_upper_forearm" link2="left_lower_forearm" reason="Adjacent" />
+    <disable_collisions link1="left_lower_forearm" link2="left_wrist" reason="Adjacent" />
+    <disable_collisions link1="left_wrist" link2="left_hand" reason="Adjacent" />
+    <disable_collisions link1="left_hand" link2="left_gripper_base" reason="Adjacent" />
+    <disable_collisions link1="left_gripper_base" link2="l_gripper_l_finger" reason="Adjacent" />
+    <disable_collisions link1="left_gripper_base" link2="l_gripper_r_finger" reason="Adjacent" />
+    <disable_collisions link1="left_gripper_base" link2="left_gripper" reason="Adjacent" />
+
+    <!-- Left arm -->
+    <disable_collisions link1="torso" link2="left_lower_shoulder" reason="Never" />
+    <disable_collisions link1="left_upper_shoulder" link2="left_upper_elbow" reason="Never" />
+    <disable_collisions link1="left_lower_shoulder" link2="left_lower_elbow" reason="Never" />
+    <disable_collisions link1="left_upper_elbow" link2="left_upper_forearm" reason="Never" />
+    <disable_collisions link1="left_lower_elbow" link2="left_lower_forearm" reason="Never" />
+    <disable_collisions link1="left_upper_forearm" link2="left_wrist" reason="Never" />
+    <disable_collisions link1="left_lower_forearm" link2="left_hand" reason="Never" />
+
+    <!-- Cross-body -->
+    <disable_collisions link1="base_link" link2="right_upper_shoulder" reason="Never" />
+    <disable_collisions link1="base_link" link2="left_upper_shoulder" reason="Never" />
+    <disable_collisions link1="torso" link2="right_upper_elbow" reason="Never" />
+    <disable_collisions link1="torso" link2="left_upper_elbow" reason="Never" />
+
+</robot>
