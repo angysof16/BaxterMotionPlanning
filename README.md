@@ -79,6 +79,7 @@ baxter/src/
   - `ros-jazzy-moveit-ros-control-interface`
   - `ros-jazzy-moveit-planners-ompl`
   - `ros-jazzy-moveit-simple-controller-manager`
+  - `ros-jazzy-moveit-ros-control-interface`
 
 ---
 
