@@ -1,3 +1,6 @@
+# define and override joint constraints for motion planning
+
+
 robot_description_planning:
   default_velocity_scaling_factor: 0.1
   default_acceleration_scaling_factor: 0.1
