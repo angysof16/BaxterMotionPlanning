@@ -57,7 +57,6 @@ baxter/src/
         │   └── pilz_cartesian_limits.yaml
         ├── launch/
         │   ├── demo.launch.py          # Full MoveIt2 + Gazebo demo
-        │   └── move_group.launch.py    # MoveIt2 move_group only
         └── rviz/
             └── moveit.rviz
 ```
