@@ -100,7 +100,7 @@ source install/setup.bash
 ros2 launch gazebo_baxter gazebo.launch.py
 ```
 
-### 3. Launch with MoveIt2 (recommended for motion planning)
+### 3. Launch with MoveIt2 (for motion planning)
 
 ```bash
 ros2 launch baxter_moveit_config demo.launch.py

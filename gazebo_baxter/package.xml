@@ -3,7 +3,7 @@
   <name>gazebo_baxter</name>
   <version>0.0.1</version>
   <description>Gazebo Challenge: robot simulation with gz-sim and ROS 2 bridge</description>
-  <maintainer email="you@example.com">Your Name</maintainer>
+  <maintainer email="sofiguerraj@gmail.com">Sofia Guerra</maintainer>
   <license>Apache-2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>ros_gz_sim</depend>

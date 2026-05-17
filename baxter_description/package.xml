@@ -2,8 +2,8 @@
 <package format="3">
   <name>baxter_description</name>
   <version>0.0.1</version>
-  <description>URDF Challenge: pure robot description (no simulation tags)</description>
-  <maintainer email="you@example.com">Your Name</maintainer>
+  <description>Baxter robot description for RViz2 visualization</description>
+  <maintainer email="sofiguerraj@gmail.com">Sofia Guerra</maintainer>
   <license>Apache-2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>xacro</depend>
