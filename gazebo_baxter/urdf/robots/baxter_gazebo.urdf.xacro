@@ -14,9 +14,7 @@
     <!-- Instantiate base robot -->
     <xacro:baxter name="${name}" use_sensors="${use_sensors}" />
 
-    <!-- Add Gazebo-specific sensor tags ONLY if sensors are enabled -->
     <xacro:if value="${use_sensors}">
-      <!-- Reference the sensor links created by baxter.urdf.xacro -->
       <xacro:imu_gazebo frame="imu_link" topic_name="imu" sensor_name="imu_sensor" />
       <xacro:lidar_gazebo frame="lidar_link" topic_name="scan" sensor_name="lidar_sensor" />
       <xacro:camera_color_gazebo frame="camera_link" topic_name="camera/image_raw"
