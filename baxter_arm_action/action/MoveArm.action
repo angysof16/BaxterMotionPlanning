@@ -1,0 +1,20 @@
+# GOAL
+# right o left
+string arm
+geometry_msgs/PoseStamped target_pose
+# 0.0-1.0 (default 0.1)
+float64 velocity_scaling
+# true = movimiento cartesiano lineal
+bool cartesian
+---
+# RESULT
+bool success
+string message
+float64 planning_time
+float64 execution_time
+---
+# FEEDBACK
+# 0.0-1.0
+float64 progress
+# "planning", "executing", "done"
+string state

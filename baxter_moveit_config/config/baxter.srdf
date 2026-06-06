@@ -4,23 +4,11 @@
     <!-- PLANNING GROUPS -->
 
     <group name="right_arm">
-        <joint name="torso_right_upper_shoulder" />
-        <joint name="right_upper_shoulder_lower_shoulder" />
-        <joint name="right_lower_shoulder_upper_elbow" />
-        <joint name="right_upper_elbow_lower_elbow" />
-        <joint name="right_lower_elbow_upper_forearm" />
-        <joint name="right_upper_forearm_lower_forearm" />
-        <joint name="right_lower_forearm_wrist" />
+        <chain base_link="torso" tip_link="right_hand" />   <!-- replace joint list with chain -->
     </group>
 
     <group name="left_arm">
-        <joint name="torso_left_upper_shoulder" />
-        <joint name="left_upper_shoulder_lower_shoulder" />
-        <joint name="left_lower_shoulder_upper_elbow" />
-        <joint name="left_upper_elbow_lower_elbow" />
-        <joint name="left_lower_elbow_upper_forearm" />
-        <joint name="left_upper_forearm_lower_forearm" />
-        <joint name="left_lower_forearm_wrist" />
+        <chain base_link="torso" tip_link="left_hand" />
     </group>
 
     <!-- END EFFECTORS -->

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="baxter_gazebo">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="baxter">
 
   <!-- Include pure robot -->
   <xacro:include filename="$(find baxter_description)/urdf/robots/baxter.urdf.xacro" />
