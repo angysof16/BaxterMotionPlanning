@@ -26,19 +26,19 @@ ARGUMENTS = [
 
 
 
-def load_yaml(package_name, file_path):
-  pkg = get_package_share_directory(package_name)
-  abs_path = os.path.join(pkg, file_path)
-  with open(abs_path, "r") as f:
+def load_yaml( package_name, file_path ):
+  pkg = get_package_share_directory( package_name )
+  abs_path = os.path.join( pkg, file_path )
+  with open( abs_path, "r" ) as f:
     return yaml.safe_load(f)
 # end def
 
 def get_robot_description():
-  pkg_gazebo = get_package_share_directory("gazebo_baxter")
-  pkg_urdf = get_package_share_directory("baxter_description")
-  urdf_path = os.path.join(pkg_gazebo, "urdf", "robots", "baxter_gazebo.urdf.xacro")
-  robot_desc = process_file(urdf_path, mappings={}).toprettyxml(indent="  ")
-  robot_desc = robot_desc.replace("package://baxter_description/", f"file://{pkg_urdf}/")
+  pkg_gazebo = get_package_share_directory( "gazebo_baxter" )
+  pkg_urdf = get_package_share_directory( "baxter_description" )
+  urdf_path = os.path.join( pkg_gazebo, "urdf", "robots", "baxter_gazebo.urdf.xacro" )
+  robot_desc = process_file( urdf_path, mappings={} ).toprettyxml(indent="  ")
+  robot_desc = robot_desc.replace( "package://baxter_description/", f"file://{pkg_urdf}/" )
   return robot_desc
 # end def
 
@@ -46,14 +46,14 @@ def get_robot_description():
 def generate_launch_description():
   ld = LaunchDescription(ARGUMENTS)
 
-  pkg_gazebo = get_package_share_directory("gazebo_baxter")
-  pkg_moveit = get_package_share_directory("baxter_moveit_config")
+  pkg_gazebo = get_package_share_directory( "gazebo_baxter" )
+  pkg_moveit = get_package_share_directory( "baxter_moveit_config" )
   # GAZEBO
   gazebo_launch = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(
-      os.path.join(pkg_gazebo, "launch", "gazebo.launch.py")
+      os.path.join( pkg_gazebo, "launch", "gazebo.launch.py" )
     ),
-    launch_arguments={"use_sim_time": LaunchConfiguration("use_sim_time")}.items(),
+    launch_arguments={"use_sim_time": LaunchConfiguration( "use_sim_time" )}.items(),
   )
   ld.add_action(gazebo_launch)
 
@@ -62,16 +62,16 @@ def generate_launch_description():
 
   robot_description_semantic = {
     "robot_description_semantic": open(
-      os.path.join(pkg_moveit, "config", "baxter.srdf")
+      os.path.join( pkg_moveit, "config", "baxter.srdf" )
     ).read()
   }
 
   # CONFIG
-  kinematics_yaml = load_yaml("baxter_moveit_config", "config/kinematics.yaml")
-  ompl_planning_yaml = load_yaml("baxter_moveit_config", "config/ompl_planning.yaml")
-  joint_limits_yaml = load_yaml("baxter_moveit_config", "config/joint_limits.yaml")
-  pilz_cartesian_limits_yaml = load_yaml("baxter_moveit_config", "config/pilz_cartesian_limits.yaml")
-  moveit_controllers_yaml = load_yaml("baxter_moveit_config", "config/moveit_controllers.yaml")
+  kinematics_yaml = load_yaml( "baxter_moveit_config", "config/kinematics.yaml" )
+  ompl_planning_yaml = load_yaml( "baxter_moveit_config", "config/ompl_planning.yaml" )
+  joint_limits_yaml = load_yaml( "baxter_moveit_config", "config/joint_limits.yaml" )
+  pilz_cartesian_limits_yaml = load_yaml( "baxter_moveit_config", "config/pilz_cartesian_limits.yaml" )
+  moveit_controllers_yaml = load_yaml( "baxter_moveit_config", "config/moveit_controllers.yaml" )
 
   planning_pipelines = {
     "planning_pipelines": ["ompl"],
@@ -108,7 +108,7 @@ def generate_launch_description():
   ld.add_action(TimerAction(period=5.0, actions=[move_group_node]))
 
   # RVIZ
-  rviz_config = os.path.join(pkg_moveit, "rviz", "moveit.rviz")
+  rviz_config = os.path.join( pkg_moveit, "rviz", "moveit.rviz" )
 
   rviz_node = Node(
     package="rviz2",
@@ -122,9 +122,9 @@ def generate_launch_description():
       kinematics_yaml,
       planning_pipelines,
       joint_limits_yaml,
-      {"use_sim_time": LaunchConfiguration("use_sim_time")},
+      {"use_sim_time": LaunchConfiguration( "use_sim_time" )},
     ],
-    condition=IfCondition(LaunchConfiguration("use_rviz")),
+    condition=IfCondition(LaunchConfiguration( "use_rviz" )),
   )
   ld.add_action(TimerAction(period=6.0, actions=[rviz_node]))
 
@@ -135,7 +135,7 @@ def generate_launch_description():
     name='move_arm_server',
     output='screen',
     parameters=[
-      {"use_sim_time": LaunchConfiguration("use_sim_time")},
+      {"use_sim_time": LaunchConfiguration( "use_sim_time" )},
     ],
   )
   ld.add_action(TimerAction(period=10.0, actions=[move_arm_server]))
