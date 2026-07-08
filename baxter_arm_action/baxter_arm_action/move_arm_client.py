@@ -17,8 +17,8 @@ class MoveArmClient(Node):
   def send_goal( self, arm: str, x, y, z, qx=0.0, qy=0.0, qz=0.0, qw=1.0 ):
     self._client.wait_for_server()
 
-    goal = MoveArm.goal()
-    goal.arm = False
+    goal = MoveArm.Goal()
+    goal.arm = arm
     goal.velocity_scaling = 0.2
     goal.cartesian = False
 

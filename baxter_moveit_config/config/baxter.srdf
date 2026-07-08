@@ -13,8 +13,8 @@
 
     <!-- END EFFECTORS -->
 
-    <end_effector name="right_gripper" parent_link="right_hand" group="right_arm" />
-    <end_effector name="left_gripper" parent_link="left_hand" group="left_arm" />
+    <end_effector name="right_gripper" parent_link="right_hand" group="right_arm" parent_group="right_arm" />
+    <end_effector name="left_gripper" parent_link="left_hand" group="left_arm" parent_group="left_arm" />
 
     <!-- DEFAULT POSES -->
 

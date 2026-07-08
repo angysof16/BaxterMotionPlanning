@@ -1,18 +1,24 @@
 # open motion planning library
-# specify planner types
+# plan trajectory
 
 
 planning_plugins:
   - ompl_interface/OMPLPlanner
+
+# verify valid initial status with preprocessors that run before planning
 request_adapters:
   - default_planning_request_adapters/ResolveConstraintFrames
   - default_planning_request_adapters/ValidateWorkspaceBounds
   - default_planning_request_adapters/CheckStartStateBounds
   - default_planning_request_adapters/CheckStartStateCollision
+
+# generate trajectory without times after planning. adapter adds timestamps
 response_adapters:
   - default_planning_response_adapters/AddTimeOptimalParameterization
   - default_planning_response_adapters/ValidateSolution
   - default_planning_response_adapters/DisplayMotionPath
+
+
 planner_configs:
   APSConfigDefault:
     type: geometric::AnytimePathShortening
@@ -21,24 +27,29 @@ planner_configs:
     max_hybrid_paths: 36  # Number of hybrid paths generated per iteration
     num_planners: 8  # The number of default planners to use for planning
     planners: "RRTConnect,RRTConnect,RRTConnect,RRTConnect,RRTConnect,RRTConnect,RRTConnect,RRTConnect"  # A comma-separated list of planner types (e.g., "PRM,EST,RRTConnect"Optionally, planner parameters can be passed to change the default:"PRM[max_nearest_neighbors=5],EST[goal_bias=.5],RRT[range=10. goal_bias=.1]"
+  
   SBLkConfigDefault:
     type: geometric::SBL
     range: 0.0  # max motion added to tree
+  
   ESTkConfigDefault:
     type: geometric::EST
     range: 0.0  # max motion added to tree
     goal_bias: 0.05  # When close to goal select goal, with this probability. default: 0.05
+  
   LBKPIECEkConfigDefault:
     type: geometric::LBKPIECE
     range: 0.0  # max motion added to tree
     border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9
     min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
+  
   BKPIECEkConfigDefault:
     type: geometric::BKPIECE
     range: 0.0  # max motion added to tree
     border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9
     failed_expansion_score_factor: 0.5  # When extending motion fails, scale score by factor. default: 0.5
     min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
+  
   KPIECEkConfigDefault:
     type: geometric::KPIECE
     range: 0.0  # max motion added to tree
@@ -46,18 +57,25 @@ planner_configs:
     border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9 (0.0,1.]
     failed_expansion_score_factor: 0.5  # When extending motion fails, scale score by factor. default: 0.5
     min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
+  
   RRTkConfigDefault:
     type: geometric::RRT
     range: 0.0  # max motion added to tree
     goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  
+  # RRTConnect - default algorithm
+  # builds two random trees from start to goal and connects them
+  # if there is a path, it will find it (eventually)
   RRTConnectkConfigDefault:
     type: geometric::RRTConnect
     range: 0.0  # max motion added to tree
+  
   RRTstarkConfigDefault:
     type: geometric::RRTstar
     range: 0.0  # max motion added to tree
     goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
     delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default 1
+  
   TRRTkConfigDefault:
     type: geometric::TRRT
     range: 0.0  # max motion added to tree
@@ -69,11 +87,14 @@ planner_configs:
     frountier_threshold: 0.0  # dist new state to nearest neighbor to disqualify as frontier. default: 0.0 set in setup()
     frountierNodeRatio: 0.1  # 1/10, or 1 nonfrontier for every 10 frontier. default: 0.1
     k_constant: 0.0  # value used to normalize expresssion. default: 0.0 set in setup()
+  
   PRMkConfigDefault:
     type: geometric::PRM
     max_nearest_neighbors: 10  # use k nearest neighbors. default: 10
+  
   PRMstarkConfigDefault:
     type: geometric::PRMstar
+  
   FMTkConfigDefault:
     type: geometric::FMT
     num_samples: 1000  # number of states that the planner should sample. default: 1000
@@ -82,6 +103,7 @@ planner_configs:
     cache_cc: 1  # use collision checking cache. default: 1
     heuristics: 0  # activate cost to go heuristics. default: 0
     extended_fmt: 1  # activate the extended FMT*: adding new samples if planner does not finish successfully. default: 1
+  
   BFMTkConfigDefault:
     type: geometric::BFMT
     num_samples: 1000  # number of states that the planner should sample. default: 1000
@@ -92,8 +114,10 @@ planner_configs:
     heuristics: 1  # activates cost to go heuristics. default: 1
     cache_cc: 1  # use the collision checking cache. default: 1
     extended_fmt: 1  # Activates the extended FMT*: adding new samples if planner does not finish successfully. default: 1
+  
   PDSTkConfigDefault:
     type: geometric::PDST
+  
   STRIDEkConfigDefault:
     type: geometric::STRIDE
     range: 0.0  # max motion added to tree
@@ -105,6 +129,7 @@ planner_configs:
     max_pts_per_leaf: 6  # max points per leaf in the GNAT. default: 6
     estimated_dimension: 0.0  # estimated dimension of the free space. default: 0.0
     min_valid_path_fraction: 0.2  # Accept partially valid moves above fraction. default: 0.2
+  
   BiTRRTkConfigDefault:
     type: geometric::BiTRRT
     range: 0.0  # max motion added to tree
@@ -113,92 +138,61 @@ planner_configs:
     frountier_threshold: 0.0  # dist new state to nearest neighbor to disqualify as frontier. default: 0.0 set in setup()
     frountier_node_ratio: 0.1  # 1/10, or 1 nonfrontier for every 10 frontier. default: 0.1
     cost_threshold: 1e300  # the cost threshold. Any motion cost that is not better will not be expanded. default: inf
+  
   LBTRRTkConfigDefault:
     type: geometric::LBTRRT
     range: 0.0  # max motion added to tree
     goal_bias: 0.05  # When close to goal select goal, with this probability. default: 0.05
     epsilon: 0.4  # optimality approximation factor. default: 0.4
+  
   BiESTkConfigDefault:
     type: geometric::BiEST
     range: 0.0  # max motion added to tree
+  
   ProjESTkConfigDefault:
     type: geometric::ProjEST
     range: 0.0  # max motion added to tree
     goal_bias: 0.05  # When close to goal select goal, with this probability. default: 0.05
+  
   LazyPRMkConfigDefault:
     type: geometric::LazyPRM
     range: 0.0  # max motion added to tree
+  
   LazyPRMstarkConfigDefault:
     type: geometric::LazyPRMstar
+  
   SPARSkConfigDefault:
     type: geometric::SPARS
     stretch_factor: 3.0  # roadmap spanner stretch factor. multiplicative upper bound on path quality. It does not make sense to make this parameter more than 3. default: 3.0
     sparse_delta_fraction: 0.25  # delta fraction for connection distance. This value represents the visibility range of sparse samples. default: 0.25
     dense_delta_fraction: 0.001  # delta fraction for interface detection. default: 0.001
     max_failures: 1000  # maximum consecutive failure limit. default: 1000
+  
   SPARStwokConfigDefault:
     type: geometric::SPARStwo
     stretch_factor: 3.0  # roadmap spanner stretch factor. multiplicative upper bound on path quality. It does not make sense to make this parameter more than 3. default: 3.0
     sparse_delta_fraction: 0.25  # delta fraction for connection distance. This value represents the visibility range of sparse samples. default: 0.25
     dense_delta_fraction: 0.001  # delta fraction for interface detection. default: 0.001
     max_failures: 5000  # maximum consecutive failure limit. default: 5000
+  
   TrajOptDefault:
     type: geometric::TrajOpt
 
-panda_arm:
+# tells MoveIt the available planners for right_arm
+right_arm:
   planner_configs:
-    - APSConfigDefault
-    - SBLkConfigDefault
-    - ESTkConfigDefault
-    - LBKPIECEkConfigDefault
-    - BKPIECEkConfigDefault
-    - KPIECEkConfigDefault
-    - RRTkConfigDefault
     - RRTConnectkConfigDefault
-    - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+    - RRTkConfigDefault
     - PRMkConfigDefault
-    - PRMstarkConfigDefault
-    - FMTkConfigDefault
-    - BFMTkConfigDefault
-    - PDSTkConfigDefault
-    - STRIDEkConfigDefault
-    - BiTRRTkConfigDefault
-    - LBTRRTkConfigDefault
-    - BiESTkConfigDefault
-    - ProjESTkConfigDefault
-    - LazyPRMkConfigDefault
-    - LazyPRMstarkConfigDefault
-    - SPARSkConfigDefault
-    - SPARStwokConfigDefault
-    - TrajOptDefault
-panda_arm_hand:
+
+# tells MoveIt the available planners for left_arm
+left_arm:
   planner_configs:
-    - APSConfigDefault
-    - SBLkConfigDefault
-    - ESTkConfigDefault
-    - LBKPIECEkConfigDefault
-    - BKPIECEkConfigDefault
-    - KPIECEkConfigDefault
-    - RRTkConfigDefault
     - RRTConnectkConfigDefault
-    - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+    - RRTkConfigDefault
     - PRMkConfigDefault
-    - PRMstarkConfigDefault
-    - FMTkConfigDefault
-    - BFMTkConfigDefault
-    - PDSTkConfigDefault
-    - STRIDEkConfigDefault
-    - BiTRRTkConfigDefault
-    - LBTRRTkConfigDefault
-    - BiESTkConfigDefault
-    - ProjESTkConfigDefault
-    - LazyPRMkConfigDefault
-    - LazyPRMstarkConfigDefault
-    - SPARSkConfigDefault
-    - SPARStwokConfigDefault
-    - TrajOptDefault
+
+# tells MoveIt the available planners for hand
 hand:
   planner_configs:
     - APSConfigDefault

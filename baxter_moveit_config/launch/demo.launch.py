@@ -15,15 +15,14 @@ ARGUMENTS = [
   DeclareLaunchArgument(
     "use_sim_time",
     default_value="true",
-    description="Use simulation clock.",
+    description="Use simulation clock",
   ),
   DeclareLaunchArgument(
     "use_rviz",
     default_value="true",
-    description="Launch RViz with MoveIt plugin.",
+    description="Launch RViz with MoveIt plugin",
   ),
 ]
-
 
 
 def load_yaml( package_name, file_path ):
@@ -48,7 +47,7 @@ def generate_launch_description():
 
   pkg_gazebo = get_package_share_directory( "gazebo_baxter" )
   pkg_moveit = get_package_share_directory( "baxter_moveit_config" )
-  # GAZEBO
+  # launch Gazebo with active controllers
   gazebo_launch = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(
       os.path.join( pkg_gazebo, "launch", "gazebo.launch.py" )
@@ -57,22 +56,27 @@ def generate_launch_description():
   )
   ld.add_action(gazebo_launch)
 
-  # ROBOT DESCRIPTION
+  # turns URDF/xacro to string. NOdes receive that string as a parameter 
   robot_description = {"robot_description": get_robot_description()}
 
+  # SRDF complements URDF (MoveIt needs both)
+  # defines planning groups, named poses, and which collision pairs to ignore 
   robot_description_semantic = {
     "robot_description_semantic": open(
       os.path.join( pkg_moveit, "config", "baxter.srdf" )
     ).read()
   }
 
-  # CONFIG
-  kinematics_yaml = load_yaml( "baxter_moveit_config", "config/kinematics.yaml" )
+  # MoveIt looks for IK solvers under this name ("robot_description_kinematics")
+  kinematics_yaml = {
+    "robot_description_kinematics": load_yaml("baxter_moveit_config", "config/kinematics.yaml")
+  }
   ompl_planning_yaml = load_yaml( "baxter_moveit_config", "config/ompl_planning.yaml" )
   joint_limits_yaml = load_yaml( "baxter_moveit_config", "config/joint_limits.yaml" )
   pilz_cartesian_limits_yaml = load_yaml( "baxter_moveit_config", "config/pilz_cartesian_limits.yaml" )
   moveit_controllers_yaml = load_yaml( "baxter_moveit_config", "config/moveit_controllers.yaml" )
 
+  # Tells MoveIt which planning pipelines to load
   planning_pipelines = {
     "planning_pipelines": ["ompl"],
     "default_planning_pipeline": "ompl",
@@ -98,7 +102,8 @@ def generate_launch_description():
     {"use_sim_time": LaunchConfiguration("use_sim_time")},
   ]
 
-  # MOVE GROUP
+  # MOVE GROUP - central MoveIt node
+  # receives all parameters, loads plugins, exposes services and actions
   move_group_node = Node(
     package = "moveit_ros_move_group",
     executable = "move_group",
@@ -128,7 +133,8 @@ def generate_launch_description():
   )
   ld.add_action(TimerAction(period=6.0, actions=[rviz_node]))
 
-  # CUSTOM ACTION INTERFACE
+  # CUSTOM ACTION INTERFACE (server)
+  # starts after 10 seconds, when move_group is ready
   move_arm_server = Node(
     package='baxter_arm_action',
     executable='move_arm_server.py',
@@ -138,7 +144,7 @@ def generate_launch_description():
       {"use_sim_time": LaunchConfiguration( "use_sim_time" )},
     ],
   )
-  ld.add_action(TimerAction(period=10.0, actions=[move_arm_server]))
+  ld.add_action( TimerAction( period=10.0, actions=[move_arm_server] ) )
 
   return ld
 # end def
