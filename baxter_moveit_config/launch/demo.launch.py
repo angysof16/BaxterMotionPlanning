@@ -67,7 +67,7 @@ def generate_launch_description():
     ).read()
   }
 
-  # MoveIt looks for IK solvers under this name ("robot_description_kinematics")
+  # MoveIt looks for IK solvers in robot_description_kinematics
   kinematics_yaml = {
     "robot_description_kinematics": load_yaml("baxter_moveit_config", "config/kinematics.yaml")
   }
