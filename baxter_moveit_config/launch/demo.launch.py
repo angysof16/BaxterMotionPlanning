@@ -35,7 +35,7 @@ def load_yaml( package_name, file_path ):
 def get_robot_description():
   pkg_gazebo = get_package_share_directory( "gazebo_baxter" )
   pkg_urdf = get_package_share_directory( "baxter_description" )
-  urdf_path = os.path.join( pkg_gazebo, "urdf", "robots", "baxter_gazebo.urdf.xacro" )
+  urdf_path = os.path.join( pkg_gazebo, "urdf", "baxter_gazebo.urdf.xacro" )
   robot_desc = process_file( urdf_path, mappings={} ).toprettyxml(indent="  ")
   robot_desc = robot_desc.replace( "package://baxter_description/", f"file://{pkg_urdf}/" )
   return robot_desc

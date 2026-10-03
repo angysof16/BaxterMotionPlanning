@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="baxter_torso">
+  <xacro:macro name="baxter_torso">
+
+    <!-- TORSO -->
+    <link name="torso">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="package://baxter_description/meshes/torso/base_link.STL" />
+        </geometry>
+        <material name="darkgray">
+          <color rgba=".2 .2 .2 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="package://baxter_description/meshes/torso/base_link_collision.STL" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="35.336455" />
+        <inertia ixx="1.849155" ixy="-0.000354" ixz="-0.154188" iyy="1.662671"
+          iyz="0.003292" izz="0.802239" />
+      </inertial>
+    </link>
+
+    <!-- TORSO JOINT -->
+    <joint name="pedestal_torso" type="fixed">
+      <parent link="base_link" />
+      <child link="torso" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+  </xacro:macro>
+</robot>

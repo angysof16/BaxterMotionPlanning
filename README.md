@@ -1,22 +1,33 @@
-# Baxter ROS2
+# BaxIt!
 
-Baxter robot simulation in ROS2 Jazzy + Gazebo Harmonic, with a roadmap toward distributed motion planning via a custom ROS2 Action interface and Zenoh as RMW bridge.
+Baxter robot simulation in ROS2 Jazzy + Gazebo Harmonic, with distributed motion planning via a custom ROS2 action interface and Zenoh as the RMW bridge, plus a second phase that brings the pipeline to the physical robot with autonomous pick & place using computer vision.
 
-> **Status:** Phase 4 complete - Custom `MoveArm` action interface integrated and functional. <br/> Phase 5 (Zenoh RMW bridge) next.
+> **Status:** Phase 1 (simulation) complete. <br/> Phase 2 (physical robot + vision) in progress.
 
 ---
 
 ## Overview
 
-This project brings Rethink Robotics' Baxter robot into a modern ROS2 stack. The long-term goal is a two-machine architecture where Gazebo runs the simulation on one machine while MoveIt2 and a high-level controller run on another, communicating over **Zenoh** instead of the default DDS middleware.
+This project brings Rethink Robotics' Baxter robot into a modern ROS2 stack, in two phases:
+
+- **Phase 1 - Simulation:** a complete Baxter simulation in Gazebo Harmonic, with `ros2_control`, MoveIt2 for motion planning, and a custom `MoveArm` action interface that abstracts MoveIt2. The long-term goal of this phase is a two-machine architecture with Gazebo running on one machine, MoveIt2 and a high-level controller on another, communicating over **Zenoh** instead of the default DDS middleware.
+- **Phase 2 - Physical robot:** the same pipeline brought to the physical Baxter at Pontificia Universidad Javeriana. A vision node using OpenCV detects an object from the wrist camera, computes its 3D position, and the robot executes pick & place fully autonomously without pre-recorded motions. Communication with the robot (ROS1 Indigo) happens through Docker + `rosbridge_suite` + `roslibpy`, without installing ROS1 natively.
 
 ---
 
-## Planned Architecture
+## Planned Architecture (Phase 1)
 
 <div align="center">
     <img height="500" alt="Image" src="https://github.com/user-attachments/assets/e53076b4-87a3-45d0-976b-5db25c7f14a2" />
 </div>
+
+## Phase 2 Architecture - Physical robot
+
+<div align="center">
+    <img height="500" alt="Image" src="https://github.com/user-attachments/assets/965b3600-7877-47d6-a32a-09907858a73a" />
+</div>
+
+The Docker container runs with `network_mode: host` to share the PC's network and reach the robot directly. `rosbridge_server` exposes all ROS1 topics as a WebSocket at `ws://localhost:9090`. The ROS2 node subscribes to the camera and publishes motion commands through the WebSocket.
 
 ---
 
@@ -25,29 +36,37 @@ This project brings Rethink Robotics' Baxter robot into a modern ROS2 stack. The
 ```
 baxter/src/
 └── baxter/
-    ├── baxter.urdf
-    ├── gazebo_baxter/       # Gazebo Harmonic simulation
+    ├── gazebo_baxter/
     │   ├── config/
     │   │   ├── ros_gz_bridge.yaml
-    │   │   └── controllers.yaml     # ros2_control configuration
+    │   │   └── controllers.yaml
     │   ├── launch/
     │   │   └── gazebo.launch.py
     │   ├── urdf/
     │   │   ├── robots/
     │   │   │   └── baxter_gazebo.urdf.xacro
-    │   │   └── sensors/            # Camera RGB, RGBD, IMU, LiDAR
+    │   │   └── sensors/
     │   └── worlds/
     │       └── empty.sdf
-    ├── baxter_description/             # URDF visualization + meshes
+    ├── baxter_description/
     │   ├── launch/
     │   │   └── display.launch.py
-    │   ├── meshes/                 # STL/DAE files per link
+    │   ├── meshes/
     │   └── urdf/
-    │       ├── robots/
-    │       │   ├── baxter.urdf.xacro
-    │       │   └── baxter_standalone.urdf.xacro
+    │       ├── baxter.urdf.xacro
+    │       ├── baxter_standalone.urdf.xacro
+    │       ├── parts/
+    │       │   ├── baxter_base.urdf.xacro
+    │       │   ├── baxter_torso.urdf.xacro
+    │       │   ├── baxter_head.urdf.xacro
+    │       │   └── arms/
+    │       │       ├── baxter_right_arm.urdf.xacro
+    │       │       └── baxter_left_arm.urdf.xacro
+    │       ├── electric_gripper/
+    │       │   ├── baxter_electric_gripper.xacro
+    │       │   └── fingers/
     │       └── sensors/
-    ├── baxter_moveit_config/           # MoveIt2 configuration
+    ├── baxter_moveit_config/
     │   ├── config/
     │   │   ├── baxter.srdf
     │   │   ├── joint_limits.yaml
@@ -56,22 +75,22 @@ baxter/src/
     │   │   ├── ompl_planning.yaml
     │   │   └── pilz_cartesian_limits.yaml
     │   ├── launch/
-    │   │   └── demo.launch.py          # Full MoveIt2 + Gazebo demo
+    │   │   └── demo.launch.py
     │   └── rviz/
     │       └── moveit.rviz
-    └── baxter_arm_action/              # Custom MoveArm action interface
+    └── baxter_arm_action/+
         ├── action/
-        │   └── MoveArm.action          # Goal / Result / Feedback definition
-        ├── baxter_arm_action/
-        │   ├── move_arm_server.py      # Action server → wraps /move_action
-        │   └── move_arm_client.py      # Example client (hardcoded right arm)
-        ├── CMakeLists.txt
-        └── package.xml
+        │   └── MoveArm.action
+        └── baxter_arm_action/
+            ├── move_arm_server.py
+            └── move_arm_client.py
 ```
 
 ---
 
 ## Prerequisites
+
+### Phase 1 - Simulation
 
 - ROS2 Jazzy
 - Gazebo Harmonic
@@ -86,11 +105,18 @@ baxter/src/
   - `ros-jazzy-moveit-ros-control-interface`
   - `ros-jazzy-moveit-planners-ompl`
   - `ros-jazzy-moveit-simple-controller-manager`
-  - `ros-jazzy-moveit-ros-control-interface`
+
+### Phase 2 - Physical robot
+
+- Docker
+- `rosbridge_suite` (inside the ROS1 Indigo container)
+- `roslibpy`
+- OpenCV
+- Network access to the physical Baxter (same LAN/WiFi segment)
 
 ---
 
-## Getting Started
+## Getting Started - Phase 1 (Simulation)
 
 ### 1. Clone and build
 
@@ -108,7 +134,7 @@ source install/setup.bash
 ros2 launch gazebo_baxter gazebo.launch.py
 ```
 
-### 3. Launch with MoveIt2 + custom action server
+### 3. Launch with MoveIt2 (for motion planning)
 
 ```bash
 ros2 launch baxter_moveit_config demo.launch.py
@@ -118,8 +144,7 @@ This launches:
 - Gazebo Harmonic simulation
 - ros2_control controllers
 - MoveIt2 move_group node
-- RViz2 with MoveIt plugin
-- `move_arm_server` action server (on `/move_arm`)
+- RViz2 with the MoveIt plugin
 
 ---
 
@@ -127,7 +152,7 @@ This launches:
 
 ### Verifying Controllers
 
-Before sending any commands, always verify that controllers are active.
+Before sending any commands (via action calls or MoveIt2), always verify that controllers are active. Controller activation can sometimes fail during launch.
 
 ```bash
 ros2 control list_controllers
@@ -141,69 +166,13 @@ right_arm_controller    joint_trajectory_controller/JointTrajectoryController  a
 joint_state_broadcaster joint_state_broadcaster/JointStateBroadcaster          active
 ```
 
-All controllers should show **`active`** status. If any show `inactive` or `unconfigured`, see the [Troubleshooting](#troubleshooting) section.
+All controllers should show **`active`** status. If any controller shows `inactive` or `unconfigured`, see the [Troubleshooting](#troubleshooting) section below.
 
 ---
 
-### Using the Custom MoveArm Action
+### Using MoveIt2 (Interactive Planning)
 
-The `MoveArm` action lets you command either arm to a Cartesian target pose. The server translates the request into a MoveIt2 `MotionPlanRequest` and forwards it to `/move_action`.
-
-#### Action definition (`MoveArm.action`)
-
-```
-# GOAL
-string arm # "right" or "left"
-geometry_msgs/PoseStamped target_pose
-float64 velocity_scaling            # 0.0-1.0 (default 0.1)
-bool cartesian                      # true = linear Cartesian motion
----
-# RESULT
-bool success
-string message
-float64 planning_time
-float64 execution_time
----
-# FEEDBACK
-float64 progress                    # 0.0-1.0
-string state                        # "planning" | "executing" | "done"
-```
-
-#### Send a goal from the command line
-
-```bash
-ros2 action send_goal /move_arm baxter_arm_action/action/MoveArm \
-  "{arm: 'right',
-    target_pose: {
-      header: {frame_id: 'world'},
-      pose: {
-        position: {x: 0.65, y: -0.2, z: 1.1},
-        orientation: {w: 1.0}
-      }
-    },
-    velocity_scaling: 0.2,
-    cartesian: false}"
-```
-
-#### Run the example Python client
-
-```bash
-ros2 run baxter_arm_action move_arm_client.py
-```
-
-The client sends the right arm to `(0.65, -0.20, 1.10)` in the `world` frame at 20% velocity.
-
-#### Key implementation notes
-
-- The server connects to MoveIt2's `/move_action` (not `/move_group`).
-- `tip_link` is set to `right_hand` / `left_hand` to match `kinematics.yaml`.
-- Goal constraints use a **4 cm tolerance box** for position and **±0.4 rad** for orientation, which gives OMPL enough freedom to find a valid IK solution.
-
----
-
-### Using MoveIt2 Interactively (RViz)
-
-1. Launch the demo (if not already running):
+1. Launch the demo (if you haven't already):
    ```bash
    ros2 launch baxter_moveit_config demo.launch.py
    ```
@@ -211,12 +180,14 @@ The client sends the right arm to `(0.65, -0.20, 1.10)` in the `world` frame at 
 2. In RViz:
    - Select Planning Group: `right_arm` or `left_arm`
    - Drag the interactive marker to set a goal pose
-   - Click **Plan** to compute a trajectory
-   - Click **Execute** to run it on the robot
+   - Click Plan to compute a trajectory
+   - Click Execute to run it on the robot
+
+3. The robot in Gazebo should move to match the planned trajectory.
 
 ---
 
-### Testing Controllers Directly via Action Calls
+### Testing Controllers via Action Calls (Command Line)
 
 #### Move Right Arm
 
@@ -287,11 +258,60 @@ ros2 launch baxter_description display.launch.py
 
 ---
 
+### Using the custom `MoveArm` action interface
+
+`baxter_arm_action` abstracts MoveIt2 behind a simple action: it takes an arm + target pose + velocity scaling, and returns success/message + execution time, publishing progress feedback (`planning` → `executing` → `done`).
+
+```bash
+ros2 run baxter_arm_action move_arm_server.py
+```
+
+```bash
+ros2 run baxter_arm_action move_arm_client.py
+```
+
+---
+
+## Getting Started - Phase 2 (Physical Robot)
+
+> This phase is under active development; the steps below reflect the planned architecture.
+
+```bash
+# Bring up Docker with ROS Indigo + rosbridge
+docker-compose up baxter-indigo
+
+# In another terminal - connect the PC to the robot
+./baxter.sh
+
+# Run the ROS2 vision node
+ros2 run baxter_arm_action vision_pick_place
+```
+
+**Docker setup (reference):**
+
+```yaml
+services:
+  baxter-indigo:
+    image: ubuntu:14.04
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=http://011511P0010.local:11311
+      - ROS_IP=<your_local_ip>
+    volumes:
+      - ./ros_ws:/root/ros_ws
+    command: >
+      bash -c "source /opt/ros/indigo/setup.bash &&
+               source /root/ros_ws/devel/setup.bash &&
+               roslaunch rosbridge_server rosbridge_websocket.launch"
+```
+
+---
+
 ## Troubleshooting
 
 ### Controllers not activating automatically?
 
-Activate them manually:
+If `ros2 control list_controllers` shows any controller as `inactive` or `unconfigured`, activate them manually:
 
 ```bash
 ros2 control switch_controllers \
@@ -301,17 +321,48 @@ ros2 control switch_controllers \
   --activate head_controller
 ```
 
-### LiDAR not showing in Gazebo?
+Verify all controllers are now active:
+```bash
+ros2 control list_controllers
+```
 
+All controllers should show `active` status.
+
+---
+
+### LiDAR not showing in Gazebo simulation?
+
+If you see the error:
+```bash
+[GUI] [Err] [VisualizeLidar.cc:285] The lidar entity with topic '[/scan]' could not be found.
+```
+This is a known issue where Gazebo doesn't automatically visualize GPU LiDAR sensors. To fix it, manually list the sensor link:
 ```bash
 gz model -m baxter -l lidar_sensor
 ```
+> Note: This command needs to be run after Gazebo is launched. The sensor will be visible in the GUI after executing the command.
 
-Run this after Gazebo is fully launched. See this [StackExchange discussion](https://robotics.stackexchange.com/questions/118158/entity-spawning-issue-ros-gz-sim-solved-by-listing-link-potentially-bug) for details.
+See this <a href="https://robotics.stackexchange.com/questions/118158/entity-spawning-issue-ros-gz-sim-solved-by-listing-link-potentially-bug">StackExchange discussion</a> for more details.
+
+---
+
+### Xacro can't find a file after modifying the URDF?
+
+If `xacro` fails with `No such file or directory` pointing somewhere inside `urdf/parts/`, check that:
+
+1. The paths in the `xacro:include` statements of `baxter.urdf.xacro` exactly match the real location of each file (including the `arms/` subfolder for the arms).
+2. Any other package that includes `baxter.urdf.xacro` (e.g. `gazebo_baxter/urdf/robots/baxter_gazebo.urdf.xacro`) uses the updated path `$(find baxter_description)/urdf/baxter.urdf.xacro`.
+3. You rebuilt after the change:
+   ```bash
+   colcon build --symlink-install --packages-select baxter_description gazebo_baxter
+   source install/setup.bash
+   ```
 
 ---
 
 ## Project Roadmap
+
+### Phase 1 - Simulation
 
 | Phase | Description | Status |
 |-------|-------------|--------|
@@ -322,6 +373,30 @@ Run this after Gazebo is fully launched. See this [StackExchange discussion](htt
 | 5 | Zenoh RMW bridge - two-machine architecture | Planned |
 | 6 | Wii Remote teleoperation via `joy` + custom ROS2 node | Planned |
 | 7 | FastDDS vs Zenoh latency benchmarks | Possible |
+
+### Phase 2 - Physical Robot (8 weeks)
+
+| Weeks | Stage | Tasks | Status |
+|---|---|---|---|
+| 1–2 | Setup & Verification | ROS Indigo workspace in Docker, verify camera and grippers, confirm PC ↔ Baxter communication | 🔄 In progress |
+| 3–4 | Vision pipeline | Color-based (HSV) cube detection with OpenCV, wrist camera calibration, (u,v) coordinates | 📋 Planned |
+| 5–6 | Vision + planning integration | Pixel → 3D conversion via TF, motion to detected position, gripper control | 📋 Planned |
+| 7–8 | Full pick and place | End-to-end integrated pipeline, tolerance tuning, repeatability testing, final documentation | 📋 Planned |
+
+---
+
+## Tech Stack
+
+| Component | Phase 1 - Simulation | Phase 2 - Physical Robot |
+|---|---|---|
+| Framework | ROS2 Jazzy | ROS2 Jazzy + ROS1 Indigo (bridge) |
+| Simulator / Robot | Gazebo Harmonic | Physical Baxter (Pontificia Universidad Javeriana) |
+| Motion planning | MoveIt2 + OMPL | MoveIt / `baxter_interface` SDK |
+| Control | `ros2_control` + `gz_ros2_control` | Baxter electric gripper |
+| Inverse kinematics | KDL Kinematics Plugin | - |
+| Vision | - | OpenCV (HSV segmentation) |
+| Communication | RMW (DDS, Zenoh coming soon) | `rosbridge_suite` + `roslibpy` (WebSocket) |
+| Language | Python | Python |
 
 ---
 

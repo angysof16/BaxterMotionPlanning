@@ -20,7 +20,6 @@ ARGUMENTS = [
       [
         get_package_share_directory( "baxter_description" ),
         "urdf",
-        "robots",
         "baxter_standalone.urdf.xacro",
       ]
     ),

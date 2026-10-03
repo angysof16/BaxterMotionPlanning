@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="baxter">
 
   <!-- Include pure robot -->
-  <xacro:include filename="$(find baxter_description)/urdf/robots/baxter.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/baxter.urdf.xacro" />
 
   <!-- Include gazebo sensors -->
   <xacro:include filename="$(find gazebo_baxter)/urdf/sensors/imu_gazebo.urdf.xacro" />

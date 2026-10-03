@@ -76,7 +76,7 @@ def get_robot_description():
   pkg_urdf = get_package_share_directory( "baxter_description" )
 
   # Process xacro
-  urdf_path = os.path.join( pkg_gazebo, "urdf", "robots", "baxter_gazebo.urdf.xacro" )
+  urdf_path = os.path.join( pkg_gazebo, "urdf", "baxter_gazebo.urdf.xacro" )
   robot_description_config = process_file( urdf_path, mappings={} )
   robot_desc = robot_description_config.toprettyxml( indent="  " )
 

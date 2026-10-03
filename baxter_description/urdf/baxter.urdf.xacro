@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="baxter">
+
+  <!-- Include sensors -->
+  <xacro:include filename="$(find baxter_description)/urdf/sensors/imu.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/sensors/lidar.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/sensors/camera_color.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/sensors/camera_rgbd.urdf.xacro" />
+
+  <!-- Include body parts -->
+  <xacro:include filename="$(find baxter_description)/urdf/parts/arms/baxter_right_arm.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/parts/arms/baxter_left_arm.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/parts/baxter_base.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/parts/baxter_torso.urdf.xacro" />
+  <xacro:include filename="$(find baxter_description)/urdf/parts/baxter_head.urdf.xacro" />
+
+  <!-- Include electric gripper -->
+  <xacro:include
+    filename="$(find baxter_description)/urdf/electric_gripper/baxter_electric_gripper.xacro" />
+
+  <!-- Macro definition -->
+  <xacro:macro name="baxter" params="name use_sensors:=true">
+
+    <xacro:baxter_base />
+    <xacro:baxter_torso />
+    <xacro:baxter_head />
+    <xacro:baxter_right_arm />
+    <xacro:baxter_left_arm />
+
+    <!-- sensors -->
+    <xacro:if value="${use_sensors}">
+      <xacro:imu parent="base_link" frame="imu_link" />
+      <xacro:lidar parent="hat" frame="lidar_link" />
+      <xacro:camera_color parent="screen" frame="camera_link" />
+    </xacro:if>
+
+  </xacro:macro>
+
+  <!--xacro:baxter
+  name="baxter" /-->
+</robot>
